@@ -6,6 +6,20 @@
 //
 
 
-protocol NetworkServiceProtocol {
+
+protocol NetworkServiceType {
+    func request<T: Codable>(endpoint: any Endpoint) async throws -> T
+}
+
+protocol Endpoint {
     
+    var path: String { get }
+    var method: HTTPMethod { get }
+    var parameters: [String: String] { get }
+}
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+
 }
