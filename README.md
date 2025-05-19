@@ -80,5 +80,5 @@ The app is structured using **MVVM (Model-View-ViewModel)** with the **Coordinat
 
 ## 👨‍💻 Author
 
-Mahmoud Saad – [@your-github-username](https://github.com/iOSMahmoudSaad)  
+Mahmoud Saad – [Github](https://github.com/iOSMahmoudSaad)  
 Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/mahmoud-saad-ios/)
