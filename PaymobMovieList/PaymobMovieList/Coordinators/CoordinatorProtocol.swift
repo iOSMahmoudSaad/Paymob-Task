@@ -5,6 +5,8 @@
 //  Created by Mahmoud Saad on 19/05/2025.
 //
 
+import UIKit
+
 protocol Coordinator: AnyObject {
     var childCoordinators: [Coordinator] { get }
     var navigationController: UINavigationController { get }
