@@ -20,5 +20,11 @@ final class MoviesListCoordinator: BaseCoordinator {
 
     func goToMovieDetails(movie: Movie) {
       
+        let movieDetailsCoordinator = MovieDetailsCoordinator(
+            navigationController: navigationController,
+            movie: movie
+        )
+        addChildCoordinator(movieDetailsCoordinator)
+        movieDetailsCoordinator.start()
     }
 }
