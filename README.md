@@ -58,7 +58,7 @@ The app is structured using **MVVM (Model-View-ViewModel)** with the **Coordinat
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/movie-list-app.git
+   git clone https://github.com/iOSMahmoudSaad/Paymob-Task.git
    ```
 
 2. Open the `.xcodeproj` or `.xcworkspace` file.
@@ -80,5 +80,6 @@ The app is structured using **MVVM (Model-View-ViewModel)** with the **Coordinat
 
 ## 👨‍💻 Author
 
-Mahmoud Saad – [Github](https://github.com/iOSMahmoudSaad)  
+Mahmoud Saad 
+iOS Engineer
 Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/mahmoud-saad-ios/)
