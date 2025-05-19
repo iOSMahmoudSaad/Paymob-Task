@@ -248,30 +248,6 @@ extension UIView {
         dateFormater.dateFormat = format
         return  dateFormater.string(from: date)
     }
-    
-    func downloadThumbnail(from videoURL: URL, completion: @escaping (UIImage?) -> Void) {
-        let asset = AVAsset(url: videoURL)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        imageGenerator.appliesPreferredTrackTransform = true
-
- 
-        let time = CMTime(seconds: 1, preferredTimescale: 1)
-
-        do {
-          
-            let cgImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
-
-            
-            let thumbnail = UIImage(cgImage: cgImage)
-
-             
-            completion(thumbnail)
-        } catch {
-             
-            print("Error generating thumbnail: \(error.localizedDescription)")
-            completion(nil)
-        }
-    }
 }
 
 struct AnchoredConstraints {
