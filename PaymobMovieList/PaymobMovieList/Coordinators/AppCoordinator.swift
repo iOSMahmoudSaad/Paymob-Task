@@ -23,7 +23,9 @@ final class AppCoordinator: BaseCoordinator {
     }
     
     func startMainScreen() {
-       
+        let mainScreenCoordinator = MoviesListCoordinator(navigationController: navigationController)
+        childCoordinators.append(mainScreenCoordinator)
+        mainScreenCoordinator.start()
     }
 }
 
