@@ -64,7 +64,7 @@ class MovieListCell: UITableViewCell {
     }
     
     @IBAction func didTapFavoriteButton(_ sender: UIButton) {
-        delegate?.didTapFavoriteButton(in: self)
+        delegate?.onTapFavoriteActionButton(in: self)
     }
     
     @MainActor
