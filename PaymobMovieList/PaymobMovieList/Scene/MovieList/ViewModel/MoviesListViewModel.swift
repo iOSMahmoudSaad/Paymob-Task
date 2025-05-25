@@ -40,8 +40,8 @@ class MoviesListViewModel {
             isLoading = true
         }
         defer {
-            Task { @MainActor in
-                self.isLoading = false
+            Task { [weak self] in
+                self?.isLoading = false
             }
         }
 
@@ -56,7 +56,9 @@ class MoviesListViewModel {
 
     
     func loadMoreMovies() {
-        Task {
+        Task { [weak self] in
+            
+            guard let self = self else { return }
             do {
                 let newPage = self.page + 1
                 let parameters = ["page": "\(newPage)"]
