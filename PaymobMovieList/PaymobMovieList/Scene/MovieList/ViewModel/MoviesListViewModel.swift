@@ -12,7 +12,7 @@ class MoviesListViewModel {
     // MARK: - Properties
     private let networkService: NetworkServiceType
     private let dbManager: DBManager
-    private let coordinator: MoviesListCoordinator
+    private weak var coordinator: MoviesListCoordinator?
     
     @Published var isLoading = true
     @Published var isPaginating = false
@@ -109,7 +109,7 @@ class MoviesListViewModel {
     }
     
     func goToMovieDetails(movie: Movie) {
-        coordinator.goToMovieDetails(movie: movie)
+        coordinator?.goToMovieDetails(movie: movie)
     }
     
     // MARK: - Private Methods
