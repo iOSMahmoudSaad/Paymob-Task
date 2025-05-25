@@ -15,7 +15,6 @@ class MoviesListViewModel {
     private weak var coordinator: MoviesListCoordinator?
     
     @Published var isLoading = true
-    @Published var isPaginating = false
 
     @Published var movies: [Movie] = []
     

@@ -29,23 +29,45 @@ final class DBManager {
     // MARK: - Public Methods
     
     func saveFavorite(movie: Movie) {
-        performBackgroundTask { [weak self] context in
-            let _ = self?.createEntity(from: movie, in: context)
-            
-            do {
-                try context.save()
-                self?.notifyFavoritesChanged()
-            } catch {
-                self?.handleError(error, operation: "saving favorite")
-            }
-        }
-    }
+          guard let movieID = movie.id else {
+              print("Movie ID is nil. Cannot save favorite.")
+              return
+          }
+          
+          performBackgroundTask { [weak self] context in
+              do {
+                  // Check if movie already exists
+                  let predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
+                  let existingItems = try self?.fetchItems(with: predicate, in: context) ?? []
+                  
+                  if let existing = existingItems.first {
+                      
+                      self?.updateEntity(existing, from: movie)
+                  } else {
+                      
+                      _ = self?.createEntity(from: movie, in: context)
+                  }
+                  
+                  try context.save()
+                  
+                  self?.saveViewContext()
+                  
+                  self?.notifyFavoritesChanged()
+                  
+              } catch {
+                  self?.handleError(error, operation: "saving favorite")
+              }
+          }
+      }
     
     func deleteFavorite(movie: Movie) {
-        guard let movieID = movie.id else { return }
+        guard let movieID = movie.id else {
+            print("Movie ID is nil. Cannot delete favorite.")
+            return
+        }
         
         performBackgroundTask { [weak self] context in
-            let predicate = NSPredicate(format: "id == %d", movieID)
+            let predicate = NSPredicate(format: "id == %@", NSNumber(value: movieID))
             
             do {
                 let itemsToDelete = try self?.fetchItems(with: predicate, in: context) ?? []
@@ -55,13 +77,13 @@ final class DBManager {
                 }
                 
                 try context.save()
+                self?.saveViewContext()
                 self?.notifyFavoritesChanged()
             } catch {
                 self?.handleError(error, operation: "deleting favorite")
             }
         }
     }
-    
     func fetchFavorites() -> [Item] {
         do {
             return try container.viewContext.fetch(Item.fetchRequest())
@@ -78,20 +100,23 @@ final class DBManager {
     }
     
     private func createEntity(from movie: Movie, in context: NSManagedObjectContext) -> Item {
-        let entity = Item(context: context)
-        entity.id = Int32(movie.id ?? 0)
-        entity.title = movie.title
-        entity.overView = movie.overview
-        entity.releaseDate = movie.releaseDate
-        entity.voteCount = Int32(movie.voteCount)
-        entity.image = movie.posterPath
-        entity.backgroundImage = movie.backdropPath
-        entity.genreIds = movie.genreIDS.map { String($0) }.joined(separator: ",")
-        entity.isFavorite = movie.isFavorite
-        entity.voteAverage = movie.voteAverage ?? 0.0
-        
-        return entity
-    }
+          let entity = Item(context: context)
+          updateEntity(entity, from: movie)
+          return entity
+      }
+      
+      private func updateEntity(_ entity: Item, from movie: Movie) {
+          entity.id = Int32(movie.id ?? 0)
+          entity.title = movie.title
+          entity.overView = movie.overview
+          entity.releaseDate = movie.releaseDate
+          entity.voteCount = Int32(movie.voteCount)
+          entity.image = movie.posterPath
+          entity.backgroundImage = movie.backdropPath
+          entity.genreIds = movie.genreIDS.map { String($0) }.joined(separator: ",")
+          entity.isFavorite = movie.isFavorite
+          entity.voteAverage = movie.voteAverage ?? 0.0
+      }
     
     private func fetchItems(with predicate: NSPredicate, in context: NSManagedObjectContext) throws -> [Item] {
         let fetchRequest: NSFetchRequest<Item> = Item.fetchRequest()
@@ -99,6 +124,16 @@ final class DBManager {
         return try context.fetch(fetchRequest)
     }
     
+    private func saveViewContext() {
+           let viewContext = container.viewContext
+           if viewContext.hasChanges {
+               do {
+                   try viewContext.save()
+               } catch {
+                   handleError(error, operation: "saving viewContext")
+               }
+           }
+       }
     private func notifyFavoritesChanged() {
         DispatchQueue.main.async { [weak self] in
             self?.favoritesDidChange.send(())
