@@ -28,8 +28,6 @@ class MovieListCell: UITableViewCell {
             configure(viewModel: viewModel)
         }
     }
-
-    var favoriteButtonTapped = PassthroughSubject<Movie, Never>()
     
     override func awakeFromNib() {
         super.awakeFromNib()
